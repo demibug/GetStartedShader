@@ -1,4 +1,4 @@
-Shader "Examples/HelloWorld"
+Shader "GetStartedShader/HelloWorld"
 {
     Properties
     {
@@ -28,7 +28,7 @@ Shader "Examples/HelloWorld"
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
-            struct appdata
+            struct a2v
             {
                 float4 positionOS : POSITION;
             };
@@ -38,7 +38,7 @@ Shader "Examples/HelloWorld"
                 float4 positionCS : SV_POSITION;
             };
 
-            v2f vert(appdata v)
+            v2f vert(a2v v)
             {
                 v2f o;
                 o.positionCS = TransformObjectToHClip(v.positionOS);
