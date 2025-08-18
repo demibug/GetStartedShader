@@ -93,7 +93,7 @@ Shader "GetStartedShader/ToonOpaque"
                 half3 ambient = SampleSH9(SHCoeffcients, normalDir);
                 // 如果不需要计算光照方向，比如卡通渲染，就不用计算法线， 可以直接给一个固定值
                 half3 ambientNoDir = SampleSH9(SHCoeffcients, half3(0.0, 1.0, 0.0));
-                // 也可以用下面这个 不收法线影响似乎可以用下面这个直接获取环境光
+                // 也可以用下面这个 不收法线影响似乎可以用下面这个直接获取环境光 但是颜色会偏暗
                 half3 ambientNoDir1 = half3(unity_SHAr.w, unity_SHAg.w, unity_SHAb.w);
 
                 // Diffuse lighting
