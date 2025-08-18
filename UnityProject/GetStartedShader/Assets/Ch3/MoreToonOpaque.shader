@@ -1,14 +1,19 @@
-Shader "GetStartedShader/ToonOpaque"
+Shader "GetStartedShader/MoreToonOpaque"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
         _Color("Main Color", Color) = (1.0, 1.0, 1.0, 1.0)
-        _ShadowThreshold("Shadow Threshold", Range(-1.0, 1.0)) = 0.0
-        _ShadowColor("Shadow Color", Color) = (0.5, 0.5, 0.5, 1.0)
+        _GradientMap("Gradient Map", 2D) = "white" {}
+        
+        _ShadowColor1stTex("Shadow Color 1st Texture", 2D) = "white" {}
+        _ShadowColor1st("Shadow Color 1st", Color) = (1.0, 1.0, 1.0, 1.0)
+        _ShadowColor2ndTex("Shadow Color 2nd Texture", 2D) = "white" {}
+        _ShadowColor2nd("Shadow Color 2nd", Color) = (1.0, 1.0, 1.0, 1.0)
+        
         [HDR] _SpecularColor("Specular Color", Color) = (1.0, 1.0, 1.0, 1.0)
         _SpecularPower("Specular Power", float) = 20.0
-        _SpecularThreshold("Specular Threshold", Range(0.0, 1.0)) = 0.5
+        
         _OutlineWidth("Outline Width", Range(0.0, 10.0)) = 1.0
         _OutlineColor("Outline Color", Color) = (0.2, 0.2, 0.2, 1.0)
     }
@@ -37,13 +42,15 @@ Shader "GetStartedShader/ToonOpaque"
             sampler2D _MainTex;
             float4 _MainTex_ST;
             half4 _Color;
+            sampler2D _GradientMap;
 
-            half _ShadowThreshold;
-            half4 _ShadowColor;
+            sampler2D _ShadowColor1stTex;
+            half4 _ShadowColor1st;
+            sampler2D _ShadowColor2ndTex;
+            half4 _ShadowColor2nd;
 
             half4 _SpecularColor;
             half _SpecularPower;
-            half _SpecularThreshold;
 
             struct a2v
             {
@@ -98,15 +105,20 @@ Shader "GetStartedShader/ToonOpaque"
 
                 // Diffuse lighting
                 half nl = dot(worldLightDir, normalDir); // Range[-1, 1]
-                half3 diff = nl > _ShadowThreshold ? 1.0 : _ShadowColor.rgb;
+                half2 diffGradient = tex2D(_GradientMap, float2(nl * 0.5 + 0.5, 0.5)).rg; // nl > _ShadowThreshold ? 1.0 : _ShadowColor.rgb;
+                half3 diffAlbedo = lerp(albedo.rgb, tex2D(_ShadowColor1stTex, i.uv) * _ShadowColor1st.rgb, diffGradient.x);
+                diffAlbedo = lerp(diffAlbedo, tex2D(_ShadowColor2ndTex, i.uv) * _ShadowColor2nd.rgb, diffGradient.y);
+                half3 diff = diffAlbedo;
 
                 // Specular lighting
                 half nh = dot(normalDir, halfDir);
-                half3 spec = pow (max(nh, 1e-5), _SpecularPower) > _SpecularThreshold ? _SpecularColor.rgb : 0.0;
+                half specGradient = tex2D(_GradientMap, float2(pow(max(nh, 1e-5), _SpecularPower), 0.5)).b;
+                half3 spec = specGradient * albedo.rgb * _SpecularColor.rgb;
 
+                // Combine all
                 Light mainLight = GetMainLight();
                 half3 lightColor = mainLight.color;
-                half3 col = ambientNoDir * albedo.rgb + (diff + spec) * albedo * lightColor;
+                half3 col = ambientNoDir * albedo.rgb + (diff + spec) * lightColor;
                 return half4(col, 1.0);;
             }
             ENDHLSL
