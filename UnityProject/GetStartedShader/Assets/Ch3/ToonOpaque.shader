@@ -63,7 +63,7 @@ Shader "GetStartedShader/ToonOpaque"
             v2f vert (a2v v)
             {
                 v2f o;
-                o.vertex = TransformObjectToHClip(v.vertex);
+                o.vertex = TransformObjectToHClip(v.vertex.xyz);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.worldNormal = TransformObjectToWorldNormal(v.normal);
                 o.worldPos = mul(UNITY_MATRIX_M, v.vertex).xyz;
@@ -146,15 +146,15 @@ Shader "GetStartedShader/ToonOpaque"
             {
                 float4 vertex : SV_POSITION;
                 float2 uv : TEXCOORD0;
-                float3 worldNormal : TEXCOORD1;
-                float3 worldPos : TEXCOORD2;
+                // float3 worldNormal : TEXCOORD1;
+                // float3 worldPos : TEXCOORD2;
             };
 
             v2f vert (a2v v)
             {
                 v2f o;
 
-                float3 viewPos = TransformWorldToView(TransformObjectToWorld(v.vertex));
+                float3 viewPos = TransformWorldToView(TransformObjectToWorld(v.vertex.xyz));
                 float3 viewNormal = mul((float3x3) UNITY_MATRIX_MV, v.normal);
                 viewNormal.z = -0.5;
                 viewPos = viewPos + normalize(viewNormal) * _OutlineWidth * 0.002;

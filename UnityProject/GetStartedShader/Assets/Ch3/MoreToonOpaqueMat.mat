@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: MoreToonOpaqueMat
-  m_Shader: {fileID: 4800000, guid: 302fc200a7f5d2b41a10649a7108b8b4, type: 3}
+  m_Shader: {fileID: 4800000, guid: a953630c8813a79488f52640a22b23cb, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -60,6 +60,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _GradientMap:
+        m_Texture: {fileID: 2800000, guid: 6d951722e07fcca4c9a2eaf9c8e22c53, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 727a75301c3d24613a3ebcec4a24c2c8, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -74,6 +78,14 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ShadowColor1stTex:
+        m_Texture: {fileID: 2800000, guid: 6d951722e07fcca4c9a2eaf9c8e22c53, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ShadowColor2ndTex:
+        m_Texture: {fileID: 2800000, guid: 6d951722e07fcca4c9a2eaf9c8e22c53, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -138,6 +150,8 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _ShadowColor: {r: 0.2830189, g: 0.21493416, b: 0.21493416, a: 1}
+    - _ShadowColor1st: {r: 1, g: 1, b: 1, a: 1}
+    - _ShadowColor2nd: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecularThreshold: {r: 1, g: 1, b: 1, a: 1}

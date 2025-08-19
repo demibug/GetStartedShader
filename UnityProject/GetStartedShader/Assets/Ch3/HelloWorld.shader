@@ -41,7 +41,7 @@ Shader "GetStartedShader/HelloWorld"
             v2f vert(a2v v)
             {
                 v2f o;
-                o.positionCS = TransformObjectToHClip(v.positionOS);
+                o.positionCS = TransformObjectToHClip(v.positionOS.xyz);
                 return o;
             }
 

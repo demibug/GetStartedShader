@@ -1,4 +1,4 @@
-Shader "GetStartedShader/MoreToonOpaque"
+Shader "GetStartedShader/ToonTransparent"
 {
     Properties
     {
@@ -21,9 +21,15 @@ Shader "GetStartedShader/MoreToonOpaque"
     {
         Tags
         {
-            "RenderType"="Opaque"
-            "Queue"="Geometry"
+            "RenderType"="Transparent"
+            "Queue"="Transparent"
             "RenderPipeline"="UniversalPipeline"
+        }
+        
+        Pass
+        {
+            ZWrite On // Enable depth writing to ensure correct rendering order
+            ColorMask 0 // Disable color writing to avoid writing to the color buffer
         }
 
         Pass
@@ -32,6 +38,11 @@ Shader "GetStartedShader/MoreToonOpaque"
             {
                 "LightMode"="SRPDefaultUnlit"
             }
+            
+            Cull Back
+            ZWrite Off
+            Blend SrcAlpha OneMinusSrcAlpha // Source color * SrcAlpha + Destination color * (1 - SrcAlpha)
+            
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -85,7 +96,7 @@ Shader "GetStartedShader/MoreToonOpaque"
                 half3 viewDir = normalize(_WorldSpaceCameraPos.xyz - i.worldPos.xyz);   // URP已舍弃UnityWorldSpaceViewDir
                 half3 halfDir = normalize(worldLightDir + viewDir);
 
-                half3 albedo = tex2D(_MainTex, i.uv).rgb * _Color.rgb;
+                half4 albedo = tex2D(_MainTex, i.uv) * _Color;
 
                 // ambient lighting
                 float4 SHCoeffcients[7];
@@ -119,7 +130,7 @@ Shader "GetStartedShader/MoreToonOpaque"
                 Light mainLight = GetMainLight();
                 half3 lightColor = mainLight.color;
                 half3 col = ambientNoDir * albedo.rgb + (diff + spec) * lightColor;
-                return half4(col, 1.0);;
+                return half4(col, albedo.a); // Source color (RGB) and Source alpha (A)
             }
             ENDHLSL
         }
@@ -132,6 +143,7 @@ Shader "GetStartedShader/MoreToonOpaque"
             }
             
             Cull Front
+            Blend SrcAlpha OneMinusSrcAlpha // Source color * SrcAlpha + Destination color * (1 - SrcAlpha)
             
             HLSLPROGRAM
             #pragma vertex vert
@@ -177,10 +189,10 @@ Shader "GetStartedShader/MoreToonOpaque"
 
             half4 frag (v2f i) : SV_Target
             {
-                half3 albedo = tex2D(_MainTex, i.uv).rgb * _Color.rgb;
+                half4 albedo = tex2D(_MainTex, i.uv) * _Color;
                 
                 half3 col = albedo * _OutlineColor.rgb;
-                return half4(col, 1.0);;
+                return half4(col, albedo.a);;
             }
             ENDHLSL
         }
