@@ -191,7 +191,7 @@ Shader "GetStartedShader/ToonTransparent"
             {
                 half4 albedo = tex2D(_MainTex, i.uv) * _Color;
                 
-                half3 col = albedo * _OutlineColor.rgb;
+                half3 col = albedo.rgb * _OutlineColor.rgb;
                 return half4(col, albedo.a);;
             }
             ENDHLSL
